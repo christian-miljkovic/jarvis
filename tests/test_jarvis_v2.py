@@ -1,4 +1,4 @@
-from jarvis_v2 import __version__
+from jarvis import __version__
 
 
 def test_version():
