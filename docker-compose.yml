@@ -33,4 +33,4 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./jarvis/postgresql:/var/lib/postgresql/data
+      - ./jarvis_data/postgresql:/var/lib/postgresql/data
