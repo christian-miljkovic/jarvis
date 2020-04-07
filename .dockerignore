@@ -38,5 +38,5 @@ __pycache__
 # CI 
 ci/
 
-hubgrid_data/
+jarvis_data/
 .env.local

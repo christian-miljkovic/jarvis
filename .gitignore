@@ -36,5 +36,5 @@ __pycache__
 .venv
 /releases/*
 pip-wheel-metadata
-hubgrid_data/
+jarvis_data/
 .env.local
