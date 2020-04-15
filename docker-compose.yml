@@ -24,6 +24,21 @@ services:
     depends_on:
       - postgres
 
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    restart: on-failure:5
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/frontend
+    volumes:
+      - "./frontend:/frontend"
+      - "/frontend/node_modules"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - frontend
+
   postgres:
     image: "postgres:11-alpine"
     environment:

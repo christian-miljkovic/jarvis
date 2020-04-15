@@ -23,5 +23,5 @@ async def twilio_test(payload: Dict = Body(...)):
 
 @router.post("/sms")
 async def get_twilio_text():
-    resp = "Your emy princess forever!"
+    resp = ":)"
     return utils.create_text_response(resp)
