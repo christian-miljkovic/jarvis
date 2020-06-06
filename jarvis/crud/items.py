@@ -1,6 +1,7 @@
 from asyncpg import Connection
 from typing import List, Union
 from jarvis.models import Beer, Wine, Liquor
+import logging
 
 
 async def create_item(
@@ -8,16 +9,18 @@ async def create_item(
 ) -> Union[Beer, Liquor, Wine, None]:
 
     item_type = str(item)
+    logging.warning(item_type)
     model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
     model = model_mapping.get(item_type, None)
     row = await conn.fetchrow(
         f"""
-        INSERT INTO {item_type}(name, price, image_url, image_width, image_height)
-        VALUES($1, $2, $3, $4, $5)
+        INSERT INTO {item_type}(name, price, quantity, image_url, image_width, image_height)
+        VALUES($1, $2, $3, $4, $5, $6)
         RETURNING *
         """,
         item.name,
         item.price,
+        item.quantity,
         item.image_url,
         item.image_width,
         item.image_height,
@@ -25,7 +28,9 @@ async def create_item(
     if row and model:
         return model(**row)
     else:
-        raise UserWarning(f"Erroed while trying to create a {item_type} item.")
+        raise UserWarning(
+            f"Either {item_type} items or model was not created while adding to the database."
+        )
 
 
 async def get_all_item_by_type(
@@ -42,4 +47,6 @@ async def get_all_item_by_type(
     if rows and model:
         return [model(**row) for row in rows]
     else:
-        raise UserWarning(f"Erroed while trying to get all {item_type} items.")
+        raise UserWarning(
+            f"Either there are no {item_type} items or the model was not correctly created while getting the menu."
+        )
