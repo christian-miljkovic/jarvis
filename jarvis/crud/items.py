@@ -1,7 +1,6 @@
 from asyncpg import Connection
 from typing import List, Union
 from jarvis.models import Beer, Wine, Liquor
-import logging
 
 
 async def create_item(
@@ -9,7 +8,6 @@ async def create_item(
 ) -> Union[Beer, Liquor, Wine, None]:
 
     item_type = str(item)
-    logging.warning(item_type)
     model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
     model = model_mapping.get(item_type, None)
     row = await conn.fetchrow(
@@ -29,7 +27,57 @@ async def create_item(
         return model(**row)
     else:
         raise UserWarning(
-            f"Either {item_type} items or model was not created while adding to the database."
+            f"Either {item_type} items or model was empty while adding to the database."
+        )
+
+
+async def update_item(
+    conn: Connection, item: Union[Beer, Liquor, Wine]
+) -> Union[Beer, Liquor, Wine, None]:
+
+    item_type = str(item)
+    model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
+    model = model_mapping.get(item_type, None)
+    row = await conn.fetchrow(
+        f"""
+        UPDATE {item_type}
+        SET name = $1, price = $2, quantity = $3, image_url = $4, image_width = $5, image_height = $6
+        RETURNING *
+        """,
+        item.name,
+        item.price,
+        item.quantity,
+        item.image_url,
+        item.image_width,
+        item.image_height,
+    )
+    if row and model:
+        return model(**row)
+    else:
+        raise UserWarning(
+            f"Either {item_type} items or model was empty when trying to make an update."
+        )
+
+
+async def delete_item(
+    conn: Connection, item: Union[Beer, Liquor, Wine]
+) -> Union[Beer, Liquor, Wine, None]:
+
+    item_type = str(item)
+    model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
+    model = model_mapping.get(item_type, None)
+    row = await conn.fetchrow(
+        f"""
+        DELETE FROM {item_type} OUTPUT DELETED *
+        WHERE id = $1
+        """,
+        item.id,
+    )
+    if row and model:
+        return model(**row)
+    else:
+        raise UserWarning(
+            f"Either {item_type} items or model was empty when trying to delete the item."
         )
 
 
@@ -48,5 +96,5 @@ async def get_all_item_by_type(
         return [model(**row) for row in rows]
     else:
         raise UserWarning(
-            f"Either there are no {item_type} items or the model was not correctly created while getting the menu."
+            f"Either there are no {item_type} items or the model was empty while getting the menu."
         )
