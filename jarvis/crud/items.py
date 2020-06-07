@@ -68,8 +68,9 @@ async def delete_item(
     model = model_mapping.get(item_type, None)
     row = await conn.fetchrow(
         f"""
-        DELETE FROM {item_type} OUTPUT DELETED *
+        DELETE FROM {item_type}
         WHERE id = $1
+        RETURNING *
         """,
         item.id,
     )

@@ -15,6 +15,15 @@
 
 - update item in db: `jarvis/v1/admin/update/{drink_type}`
 
+- delete item in db: `jarvis/v1/admin/delete/{drink_type}`
+  - body payload `{"id": {uuid} }`
+
+
+#### To-Do
+1. Fix up Cart Item pydantic model for `user/add`
+2. Include fuzzy wuzzy comparator to get the right item for `user/add`
+3. Add to memory using twilio helper for `user/add`
+
 #### Run Book for Starting NGROK 
 1. `make up`
 2. `make logs`

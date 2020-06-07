@@ -16,3 +16,10 @@ class TwilioHelper:
 
     def add_text(self, response: dict, message: str):
         response.get("actions").append({"say": message})
+
+    @staticmethod
+    def remember_this_item(current_memory, item, quantity):
+        current_order = current_memory.get("order", {"order": []})
+        item_object = {"item": item.dict().get("id"), "quantity": quantity}
+        current_order.append(item_object)
+        return {"actions": [{"remember": current_order}]}

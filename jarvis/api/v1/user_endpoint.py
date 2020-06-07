@@ -38,13 +38,14 @@ async def add_item_to_cart(request: Request, db: DataBase = Depends(get_database
 async def get_menu(
     item_type: str, db: DataBase = Depends(get_database),
 ):
-    logging.warning("menu")
     async with db.pool.acquire() as conn:
         try:
             items = await crud.get_all_item_by_type(conn, item_type)
-            return items
             message_list = [utils.item_model_to_message(item) for item in items]
             message = "\n".join(message_list)
+            return message
+
+            ## get rid of message when sending back to twilio
             twilio_message = twilio_helper.compose_mesage(message)
             return twilio_message
 
