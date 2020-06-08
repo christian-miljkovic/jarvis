@@ -6,6 +6,7 @@ from jarvis.lib import TwilioHelper
 from typing import Dict
 from twilio.rest import Client
 import jarvis.crud as crud
+import jarvis.models as model
 import logging
 
 # import jarvis.models as model
@@ -18,20 +19,23 @@ client = Client(config.TWILIO_ACCOUNT_SID, config.TWILIO_ACCOUNT_AUTH_TOKEN)
 
 @router.post("/add")
 async def add_item_to_cart(request: Request, db: DataBase = Depends(get_database)):
-    body = await request.form()
-    parsed_body = dict(body)
-    logging.warning(parsed_body)
-    beer = parsed_body.get("Field_beer_Value")
-    msg = f"You've succesfully added {beer} to your cart! Reply with `Checkout` if you're done shopping!"
-    return twilio_helper.compose_mesage(msg)
+    async with db.pool.acquire() as conn:
+        body = await request.form()
+        parsed_body = dict(body)
+        # logging.warning(parsed_body)
+        cart_item = model.CartItem(**parsed_body)
+        normalized_cart_item = utils.normalize_cart_item_model(conn, cart_item)
+        logging.warning(normalized_cart_item)
+        msg = f"You've succesfully added {cart_item} to your cart! Reply with `Checkout` if you're done shopping!"
+        return twilio_helper.compose_mesage(msg)
 
-    # async with db.pool.acquire() as conn:
-    # added_item = model.CartItem(**payload)
-    # Make potentially a new helper class that has add item
-    # because you have to then convert this to a message after etc
-    # shopping_cart = model.ShoppingCart(**payload)
+        # async with db.pool.acquire() as conn:
+        # added_item = model.CartItem(**payload)
+        # Make potentially a new helper class that has add item
+        # because you have to then convert this to a message after etc
+        # shopping_cart = model.ShoppingCart(**payload)
 
-    # return None
+        # return None
 
 
 @router.get("/menu/{item_type}")

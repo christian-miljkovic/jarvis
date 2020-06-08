@@ -391,6 +391,17 @@ version = "1.0.4"
 
 [[package]]
 category = "main"
+description = "Python extension for computing string edit distances and similarities."
+name = "python-levenshtein"
+optional = false
+python-versions = "*"
+version = "0.12.0"
+
+[package.dependencies]
+setuptools = "*"
+
+[[package]]
+category = "main"
 description = "A streaming multipart parser for Python"
 name = "python-multipart"
 optional = false
@@ -579,7 +590,7 @@ python-versions = "*"
 version = "1.11.2"
 
 [metadata]
-content-hash = "6ee69d05c175fbae9e71bdbb2a0b1d1dbd89159c02ce346a35e0dcf3f6cee4c9"
+content-hash = "7f0a21db82f34d36e52e2bf6227aec3337ed5d76d2d6de878d35aa10a88dedbc"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -827,6 +838,9 @@ python-editor = [
     {file = "python_editor-1.0.4-py2.7.egg", hash = "sha256:ea87e17f6ec459e780e4221f295411462e0d0810858e055fc514684350a2f522"},
     {file = "python_editor-1.0.4-py3-none-any.whl", hash = "sha256:1bf6e860a8ad52a14c3ee1252d5dc25b2030618ed80c022598f00176adc8367d"},
     {file = "python_editor-1.0.4-py3.5.egg", hash = "sha256:c3da2053dbab6b29c94e43c486ff67206eafbe7eb52dbec7390b5e2fb05aac77"},
+]
+python-levenshtein = [
+    {file = "python-Levenshtein-0.12.0.tar.gz", hash = "sha256:033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1"},
 ]
 python-multipart = [
     {file = "python-multipart-0.0.5.tar.gz", hash = "sha256:f7bb5f611fc600d15fa47b3974c8aa16e93724513b49b5f95c81e6624c83fa43"},
