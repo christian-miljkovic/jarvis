@@ -3,7 +3,9 @@
 - show menu: `jarvis/v1/user/menu/{item_type}`
   - [x] Retrieves all items by type 
 - add item to cart: `jarvis/v1/user/add`
-  - takes a body payload which is alcohol
+  - [x] Takes a body payload which is alcohol and parses it into a `CartItem`
+  - [x] Matches text provided by user to actual name  
+  - [] Adds `CartItem` to the shopping list 
 - checkout cart: `jarvis/v1/user/checkout`
 
 #### Admin
@@ -20,9 +22,8 @@
 
 
 #### To-Do
-1. Fix up Cart Item pydantic model for `user/add`
-2. Include fuzzy wuzzy comparator to get the right item for `user/add`
-3. Add to memory using twilio helper for `user/add`
+1. Add cart_item to memory using twilio helper for `user/add` 
+2. Create a shopping cart model (maybe)
 
 #### Run Book for Starting NGROK 
 1. `make up`

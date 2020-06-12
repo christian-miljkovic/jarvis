@@ -9,8 +9,6 @@ import jarvis.crud as crud
 import jarvis.models as model
 import jarvis.core.text_responses as text
 
-# import jarvis.models as model
-
 
 router = APIRouter()
 twilio_helper = TwilioHelper()
@@ -46,9 +44,6 @@ async def get_menu(
             items = await crud.get_all_item_by_type(conn, item_type)
             message_list = [utils.item_model_to_message(item) for item in items]
             message = "\n".join(message_list)
-            return message
-
-            ## get rid of message when sending back to twilio
             twilio_message = twilio_helper.compose_mesage(message)
             return twilio_message
 
