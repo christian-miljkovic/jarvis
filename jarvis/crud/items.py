@@ -9,7 +9,7 @@ async def create_item(
 
     item_type = str(item)
     model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
-    model = model_mapping.get(item_type, None)
+    model = model_mapping.get(item_type.lower(), None)
     row = await conn.fetchrow(
         f"""
         INSERT INTO {item_type}(name, price, quantity, image_url, image_width, image_height)
@@ -37,7 +37,7 @@ async def update_item(
 
     item_type = str(item)
     model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
-    model = model_mapping.get(item_type, None)
+    model = model_mapping.get(item_type.lower(), None)
     row = await conn.fetchrow(
         f"""
         UPDATE {item_type}
@@ -65,7 +65,7 @@ async def delete_item(
 
     item_type = str(item)
     model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
-    model = model_mapping.get(item_type, None)
+    model = model_mapping.get(item_type.lower(), None)
     row = await conn.fetchrow(
         f"""
         DELETE FROM {item_type}
@@ -87,7 +87,7 @@ async def get_all_item_by_type(
 ) -> List[Union[Beer, Liquor, Wine, None]]:
 
     model_mapping = {"beer": Beer, "wine": Wine, "liquor": Liquor}
-    model = model_mapping.get(item_type, None)
+    model = model_mapping.get(item_type.lower(), None)
     rows = await conn.fetch(
         f"""
         SELECT * FROM {item_type} WHERE quantity > 0

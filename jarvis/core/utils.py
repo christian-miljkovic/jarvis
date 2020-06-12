@@ -22,17 +22,20 @@ def item_model_to_message(item) -> str:
 
 
 async def normalize_cart_item_model(conn, model):
-    cart_item_with_type = get_item_type_from_model(model.dict())
+    cart_item_as_dict = model.dict()
+    cart_item_with_type = get_item_type_from_model(cart_item_as_dict)
     cart_item_cleaned = get_item_name_from_model(cart_item_with_type)
     user_input_name = cart_item_cleaned.get("name")
-    item_type = cart_item_cleaned.get("item_type").lower()
-    cart_item_cleaned["name"] = match_item_name_from_user_input(
+    item_type = cart_item_cleaned.get("item_type")
+    logging.warning(item_type)
+    cart_item_cleaned["name"] = await match_item_name_from_user_input(
         conn, user_input_name, item_type
     )
-    return cart_item_cleaned
+    logging.warning(cart_item_cleaned)
+    return cart_item_with_type
 
 
-async def get_item_type_from_model(model):
+def get_item_type_from_model(model):
     model_dict = model
     type_fields = {"beer_type", "wine_type", "liquor_type"}
 
@@ -44,7 +47,7 @@ async def get_item_type_from_model(model):
     return model_dict
 
 
-async def get_item_name_from_model(model):
+def get_item_name_from_model(model):
     model_dict = model
     type_fields = {"beer_name", "wine_name", "liquor_name"}
 
@@ -56,8 +59,11 @@ async def get_item_name_from_model(model):
     return model_dict
 
 
-async def match_item_name_from_user_input(conn, item_type, user_text):
+async def match_item_name_from_user_input(conn, user_text, item_type):
     list_of_items = await get_all_item_by_type(conn, item_type)
     list_of_names = [item.name for item in list_of_items]
     highest_accurate_match = process.extractOne(user_text, list_of_names)
-    return highest_accurate_match
+
+    if not highest_accurate_match:
+        raise UserWarning("No accurate match was found based on the input")
+    return highest_accurate_match[0]
