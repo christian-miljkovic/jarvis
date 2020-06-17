@@ -22,9 +22,10 @@
 
 
 #### To-Do
-1. Add cart_item to memory using twilio helper for `user/add` 
-2. Create a shopping cart model (maybe)
-3. Make shopping cart message dynamic
+1. Finish crud operations for shopping cart model
+2. Create cart item crud operations
+3. Add cart item to shopping cart in helper class
+
 
 #### Run Book for Starting NGROK 
 1. `make up`

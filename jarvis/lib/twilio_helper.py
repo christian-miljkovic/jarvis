@@ -1,7 +1,6 @@
 from jarvis.core import config
 from jarvis.core import utils
 from twilio.rest import Client
-import logging
 
 TWILIO_CLIENT = Client(config.TWILIO_ACCOUNT_SID, config.TWILIO_ACCOUNT_AUTH_TOKEN)
 

@@ -35,6 +35,7 @@ def upgrade():
         sa.Column("image_type", sa.String),
         sa.Column("image_width", sa.Integer, server_default="0", nullable=True),
         sa.Column("image_height", sa.Integer, server_default="0", nullable=True),
+        sa.Column("created_at", sa.DateTime, server_default=sa.text("now()")),
     )
 
     op.create_table(
@@ -53,6 +54,7 @@ def upgrade():
         sa.Column("image_type", sa.String),
         sa.Column("image_width", sa.Integer, server_default="0", nullable=True),
         sa.Column("image_height", sa.Integer, server_default="0", nullable=True),
+        sa.Column("created_at", sa.DateTime, server_default=sa.text("now()")),
     )
     op.create_table(
         "liquor",
@@ -70,6 +72,33 @@ def upgrade():
         sa.Column("image_type", sa.String),
         sa.Column("image_width", sa.Integer, server_default="0", nullable=True),
         sa.Column("image_height", sa.Integer, server_default="0", nullable=True),
+        sa.Column("created_at", sa.DateTime, server_default=sa.text("now()")),
+    )
+    op.create_table(
+        "shopping_cart",
+        sa.Column(
+            "id",
+            uuid_type,
+            primary_key=True,
+            server_default=sa.text("uuid_generate_v4()"),
+            nullable=False,
+        ),
+        sa.Column("customer_phone_number", sa.String, nullable=False),
+        sa.Column("created_at", sa.DateTime, server_default=sa.text("now()")),
+    )
+    op.create_table(
+        "cart_item",
+        sa.Column(
+            "id",
+            uuid_type,
+            primary_key=True,
+            server_default=sa.text("uuid_generate_v4()"),
+            nullable=False,
+        ),
+        sa.Column("product_id", uuid_type, nullable=False),
+        sa.Column("shopping_cart_id", uuid_type, nullable=False),
+        sa.Column("liquor_type", sa.Integer, nullable=False),
+        sa.Column("created_at", sa.DateTime, server_default=sa.text("now()")),
     )
 
 
@@ -77,3 +106,5 @@ def downgrade():
     op.drop_table("beer")
     op.drop_table("wine")
     op.drop_table("liquor")
+    op.drop_table("shopping_cart")
+    op.drop_table("cart_item")
