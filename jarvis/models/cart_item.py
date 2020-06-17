@@ -1,7 +1,9 @@
 from pydantic import BaseModel, Field, validator
+from uuid import UUID
 
 
 class CartItem(BaseModel):
+    id: UUID = None
     name: str = None
     item_type: str = None
     quantity: str = Field(None, alias="Field_quantity_Value")

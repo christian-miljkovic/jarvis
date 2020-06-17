@@ -24,6 +24,7 @@ async def add_item_to_cart(request: Request, db: DataBase = Depends(get_database
         normalized_cart_item = await utils.normalize_cart_item_model(conn, cart_item)
         cart_item_name = normalized_cart_item.get("name")
         item_quantity = normalized_cart_item.get("quantity")
+
         success_message = text.add_item_success(cart_item_name, item_quantity)
         shopping_cart_message = text.shopping_cart_info(1)
         msg = "".join([success_message, shopping_cart_message])

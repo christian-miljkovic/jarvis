@@ -2,7 +2,6 @@ from starlette.responses import JSONResponse, Response
 from twilio.twiml.messaging_response import MessagingResponse
 from fuzzywuzzy import process
 from jarvis.crud.items import get_all_item_by_type
-import logging
 
 
 def create_text_response(response: MessagingResponse) -> Response:
@@ -27,12 +26,13 @@ async def normalize_cart_item_model(conn, model):
     cart_item_cleaned = get_item_name_from_model(cart_item_with_type)
     user_input_name = cart_item_cleaned.get("name")
     item_type = cart_item_cleaned.get("item_type")
-    logging.warning(item_type)
-    cart_item_cleaned["name"] = await match_item_name_from_user_input(
+    matched_item = await match_item_by_name_from_user_input(
         conn, user_input_name, item_type
     )
-    logging.warning(cart_item_cleaned)
-    return cart_item_with_type
+    cart_item_cleaned["name"] = matched_item[0]
+    cart_item_cleaned["id"] = matched_item[1]
+
+    return cart_item_cleaned
 
 
 def get_item_type_from_model(model):
@@ -59,11 +59,14 @@ def get_item_name_from_model(model):
     return model_dict
 
 
-async def match_item_name_from_user_input(conn, user_text, item_type):
+async def match_item_by_name_from_user_input(conn, user_text, item_type):
     list_of_items = await get_all_item_by_type(conn, item_type)
     list_of_names = [item.name for item in list_of_items]
+    name_to_id_dict = {item.name: str(item.id) for item in list_of_items}
     highest_accurate_match = process.extractOne(user_text, list_of_names)
 
     if not highest_accurate_match:
         raise UserWarning("No accurate match was found based on the input")
-    return highest_accurate_match[0]
+    matched_name = highest_accurate_match[0]
+    matched_id = name_to_id_dict.get(matched_name, "")
+    return [matched_name, matched_id]
